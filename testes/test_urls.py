@@ -15,6 +15,7 @@ Os testes devem verificar:
 from urls import adicionar_url,carregar_urls
 
 urls_cadastradas = carregar_urls()
+print(urls_cadastradas)
 
 sucesso,mensagem = adicionar_url(
     "www.firefox.com.br",

@@ -83,6 +83,3 @@ def adicionar_url(url,urls):
     urls.append(url)
 
     return True,"Url cadastrada com sucesso!"
-
-
-print(carregar_urls())
