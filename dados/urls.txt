@@ -1,0 +1,7 @@
+Esse arquivo será a fonte de URLs disponíveis inicialmente.
+
+Detalhes importantes:
+- Uma URL por linha.
+- Evitar linhas vazias e espaços extras.
+- Usar codificação UTF-8 na leitura.
+- Definir o caminho do arquivo de forma independente do diretório em que o terminal foi aberto.
