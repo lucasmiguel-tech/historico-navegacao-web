@@ -11,3 +11,23 @@ Os testes devem verificar:
 5. Se a política de duplicatas funciona como foi definida.
 6. Se uma falha na leitura do arquivo é tratada adequadamente.
 '''
+
+from urls import adicionar_url,carregar_urls
+
+urls_cadastradas = carregar_urls()
+
+sucesso,mensagem = adicionar_url(
+    "www.firefox.com.br",
+    urls_cadastradas
+)
+
+assert sucesso is False
+print(mensagem)
+
+sucesso,mensagem = adicionar_url(
+    "www.ifpb.edu.br",
+    urls_cadastradas
+)
+
+assert sucesso is False
+print(mensagem)
