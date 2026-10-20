@@ -51,7 +51,7 @@ def validar_url(url) -> bool:
     if not url:
         return False
     
-    #Caso de url válida
+    #Casos de url válida
     if url.startswith("www."):
         return True
     
