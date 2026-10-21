@@ -1,88 +1,109 @@
-'''
-Esse módulo cuidará das URLs disponíveis para navegação e das regras para adicionar novas URLs.
-------------------
-Conceitos de Python
 
-    Manipulação de arquivos com open() e with.
+"""
+Gerencia as URLs disponíveis para navegação.
 
-    Leitura de linhas com readlines() ou iteração sobre o arquivo.
-
-    Manipulação de strings com strip().
-
-    Validação de entradas com condicionais.
-
-    Listas para armazenar URLs e exceções para tratar falhas de leitura.
-'''
+Responsabilidades:
+- Carregar URLs de dados/urls.txt.
+- Validar o formato das URLs.
+- Cadastrar novas URLs no arquivo.
+"""
 
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
-def carregar_urls() -> list:
-    
-    caminho = Path(__file__).parent / "dados" / "urls.txt"
+CAMINHO_URLS = Path(__file__).parent / "dados" / "urls.txt"
+
+
+def carregar_urls() -> list[str]:
+    """Carrega as URLs cadastradas no arquivo."""
     urls = []
 
     try:
-
-        with open(caminho,"r",encoding="utf-8") as arq:
-            for linha in arq:
+        with open(CAMINHO_URLS, "r", encoding="utf-8") as arquivo:
+            for linha in arquivo:
                 url = linha.strip()
-                
-                if not url:
-                    continue
 
-                if validar_url(url):
+                if url and validar_url(url) and url not in urls:
                     urls.append(url)
-        
-    except FileNotFoundError:
-        pass
-    
-    except OSError as erro:
-        pass
 
-    
+    except FileNotFoundError:
+        # O arquivo ainda não existe.
+        return []
+
+    except OSError as erro:
+        raise RuntimeError(
+            f"Erro ao ler o arquivo de URLs: {erro}"
+        ) from erro
+
     return urls
 
 
-def validar_url(url) -> bool:
+def validar_url(url: str) -> bool:
+    """Verifica se a URL possui um formato básico válido."""
     url = url.strip()
 
-    #Caso de url Inválida
-    if not url:
+    if not url or any(caractere.isspace() for caractere in url):
         return False
-    
-    #Casos de url válida
+
+    # Permite endereços como www.ifpb.edu.br.
     if url.startswith("www."):
+        url = "https://" + url
+
+    try:
+        partes = urlsplit(url)
+
+        if partes.scheme not in ("http", "https"):
+            return False
+
+        dominio = partes.hostname
+
+        if not dominio or "." not in dominio:
+            return False
+
+        # Evita domínios com pontos vazios nas extremidades.
+        if dominio.startswith(".") or dominio.endswith("."):
+            return False
+
+        # Acessar .port também identifica portas malformadas.
+        _ = partes.port
+
         return True
-    
-    if url.startswith("https://"):
-        return True
 
-    if url.startswith("http://"):
-            return True
-
-    return False
+    except ValueError:
+        return False
 
 
-
-def adicionar_url(url,urls):
-    caminho = Path(__file__).parent / "dados" / "urls.txt"
+def adicionar_url(
+    url: str,
+    urls_conhecidas: list[str]
+) -> tuple[bool, str]:
+    """Valida, salva e adiciona uma URL à lista em memória."""
     url = url.strip()
 
     if not validar_url(url):
-        return False,"Url possui formato inválido"
+        return False, "URL possui formato inválido."
 
-    if url in urls:
-        return False,"Url já cadastrada"
-    
+    if url in urls_conhecidas:
+        return False, "URL já cadastrada."
+
     try:
+        with open(CAMINHO_URLS, "a+", encoding="utf-8") as arquivo:
+            arquivo.seek(0, 2)
+            arquivo.seek(arquivo.tell() - 1) if arquivo.tell() else None
+            ultimo_caractere = arquivo.read() if arquivo.tell() else ""
 
-        with open(caminho,"a",encoding="utf-8") as arquivo:
-            arquivo.write("\n" + url + "\n")
-        
-    except OSError as erro:
-        return False,"Não foi possivel salvar a Url"
+            arquivo.seek(0, 2)
 
-    urls.append(url)
+            if arquivo.tell() > 0 and ultimo_caractere != "\n":
+                arquivo.write("\n")
 
-    return True,"Url cadastrada com sucesso!"
+            arquivo.write(url + "\n")
+
+    except OSError:
+        return False, "Não foi possível salvar a URL."
+
+    # Atualiza a lista somente depois de salvar no arquivo.
+    urls_conhecidas.append(url)
+
+    return True, "URL cadastrada com sucesso!"
