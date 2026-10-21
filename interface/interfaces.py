@@ -39,12 +39,6 @@ def executar_comando(cmd: str, home: str, hist: Historico) -> None:
                 return home
 
             return anterior
-            
-        case "#sair":
-            hist.clear()
-            home = None
-
-            return home
         
         case "#showhist":
             print("Histórico:\n")
@@ -76,20 +70,23 @@ def executar_comando(cmd: str, home: str, hist: Historico) -> None:
 
         case "#add":
             urls = carregar_urls()
-            
-            print("URLs devem começar com um dos seguintes: 'www.', 'http://', 'https://'")
+
+            print("URLs devem começar com: 'www.', 'http://', 'https://'")
+            print("Digite #cancelar para voltar à navegação.")
+
             while True:
-                newUrl = input("\nDigite a nova URL: ")
+                newUrl = input("\nDigite a nova URL: ").strip()
+
+                if newUrl == "#cancelar" or not newUrl:
+                    print("Cadastro cancelado.")
+                    return home
+
                 valida, msg = adicionar_url(newUrl, urls)
 
-                if not valida:
-                    print(msg)
-                    continue
-
                 print(msg)
-                break
 
-            return home
+                if valida:
+                    return home
 
 
 def main():
@@ -103,7 +100,7 @@ def main():
             carregar_pagina(home)
             redesenhar = False
 
-        entrada = input("\n> ")
+        entrada = input("\n> ").strip()
 
         if entrada.startswith("#"):
             if entrada in comandos:

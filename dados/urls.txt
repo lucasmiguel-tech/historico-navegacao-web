@@ -3,7 +3,7 @@ www.google.com.br
 http://example1.com
 www.detran.pb.gov.br
 www.apple.com.br
-suap.com.br
+www.suap.com.br
 https://example2.com.br
 www.firefox.com.br
 
