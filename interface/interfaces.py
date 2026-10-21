@@ -130,7 +130,7 @@ def main():
 
             if entrada in urls:
                 home = entrada
-                hist.url_digitada(entrada)
+                hist.registrar(entrada)
                 redesenhar = True
                 continue
 
