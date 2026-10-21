@@ -6,3 +6,5 @@ www.apple.com.br
 suap.com.br
 https://example2.com.br
 www.firefox.com.br
+
+www.testeUrl1.com

@@ -10,3 +10,19 @@ Conceitos de Python e Estrutura de Dados
 - Condicionais: verificar se há páginas anteriores antes de voltar.
 - Exceções e casos-limite: evitar erros quando o histórico estiver vazio.
 '''
+class Historico:
+    def __init__(self):
+        self._pilha: list[str] = []
+
+    def url_digitada(self, url: str) -> None:
+        self._pilha.append(url)
+
+    def voltar(self) -> str | None:
+        if len(self._pilha) <= 1:
+            return None
+
+        self._pilha.pop()
+        return self._pilha[-1]
+
+    def exibir(self) -> list[str]:
+        return list(reversed(self._pilha))

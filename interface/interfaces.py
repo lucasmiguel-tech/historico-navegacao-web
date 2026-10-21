@@ -12,8 +12,9 @@ Conceitos de Python
 '''
 
 from urls import carregar_urls, validar_url, adicionar_url
+from historico import Historico
 
-comandos = ["#back", "#showhist", "#urls", "#add", "#sair"]
+comandos = ["#back", "#showhist", "#urls", "#cmds", "#add", "#sair"]
 
 def carregar_pagina(url: str | None) -> None:
     print("\x1b[2J", end="")
@@ -23,18 +24,21 @@ def carregar_pagina(url: str | None) -> None:
         print("-----------------------------------\n")
         print(f"\nVocê está na página: {url}\n")
         return
+    
+    print("-> Digite #cmds para ver os comandos disponíveis.\n")
+    print("Digite a URL que deseja acessar:")
 
-    print("Digite a URL que deseja acessar\n")
 
-
-def executar_comando(cmd: str, home: str, hist: list) -> None:
+def executar_comando(cmd: str, home: str, hist: Historico) -> None:
      match cmd:
         case "#back":
-            if (len(hist) > 1):
-                hist.pop()
-                return hist[-1]
+            anterior = hist.voltar()
 
-            return home
+            if anterior is None:
+                print("Não há página anterior.")
+                return home
+
+            return anterior
             
         case "#sair":
             hist.clear()
@@ -43,16 +47,29 @@ def executar_comando(cmd: str, home: str, hist: list) -> None:
             return home
         
         case "#showhist":
-            print("Histórico: \n\n")
-            for i in reversed(hist):
-                print(i)
+            print("Histórico:\n")
+
+            paginas = hist.exibir()
+
+            if not paginas:
+                print("Histórico vazio.")
+
+            for url in paginas:
+                print(url)
 
             return home
 
         case "#urls":
-            print("URLs registradas: \n\n")
+            print("URLs registradas: \n")
             urls = carregar_urls()
             for i in urls:
+                print(i)
+
+            return home
+
+        case "#cmds":
+            print("Comando disponíveis: \n")
+            for i in comandos:
                 print(i)
 
             return home
@@ -76,7 +93,7 @@ def executar_comando(cmd: str, home: str, hist: list) -> None:
 
 
 def main():
-    hist = []
+    hist = Historico()
     home = None
     redesenhar = True
 
@@ -95,22 +112,29 @@ def main():
                     print("Encerrando navegador...")
                     break
 
+                pagina_anterior = home
                 home = executar_comando(entrada, home, hist)
 
-                if entrada == "#back":
+                if entrada == "#back" and home != pagina_anterior:
                     redesenhar = True
 
                 continue
 
             else:
-                print("ERRO: Comando não reconhecido.")
+                print("\nERRO: Comando não reconhecido.")
                 continue
             
 
         if validar_url(entrada):
-            home = entrada
-            hist.append(entrada)
-            redesenhar = True
+            urls = carregar_urls()
+
+            if entrada in urls:
+                home = entrada
+                hist.url_digitada(entrada)
+                redesenhar = True
+                continue
+
+            print("\nERROR: URL não encontrada.")
             continue
 
 
