@@ -13,16 +13,19 @@ Conceitos de Python e Estrutura de Dados
 
 class Historico:
     def __init__(self):
-        self.pilha = []
+        self._pilha = []
     
     def url_digitada(self,url):
-        self.pilha.append(url)
+        self._pilha.append(url)
 
     def voltar(self):
-        if not self.pilha:
+        if not self._pilha:
             return None
         
-        return self.pilha.pop()
+        return self._pilha.pop()
 
     def exibir(self):
-        return 
+        if not self.pilha:
+            return None
+
+        return self._pilha
