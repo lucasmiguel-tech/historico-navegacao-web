@@ -55,8 +55,11 @@ def validar_url(url) -> bool:
     if url.startswith("www."):
         return True
     
-    if url.startswith("https//"):
+    if url.startswith("https://"):
         return True
+
+    if url.startswith("http://"):
+            return True
 
     return False
 
