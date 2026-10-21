@@ -11,17 +11,23 @@ Conceitos de Python e Estrutura de Dados
 - Exceções e casos-limite: evitar erros quando o histórico estiver vazio.
 '''
 class Historico:
+    """
+    Controla o histórico de páginas anteriores usando uma pilha
+    """
     def __init__(self):
-        self.pilha = []
+        self._pilha = []
     
-    def url_digitada(self,url):
-        self.pilha.append(url)
+    def registrar(self,url:str):
+        """Adiciona uma página anterior ao histórico."""
+        self._pilha.append(url)
 
-    def voltar(self):
-        if not self.pilha:
+    def voltar(self) -> str | None:
+        """Remove e retorna a página mais recente do histórico."""
+        if not self._pilha:
             return None
         
-        return self.pilha.pop()
+        return self._pilha.pop()
 
     def exibir(self):
-        return 
+        """Retorna uma cópia das páginas armazenadas."""
+        return self._pilha.copy()
