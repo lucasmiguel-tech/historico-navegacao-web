@@ -29,7 +29,7 @@ def carregar_pagina(url: str | None) -> None:
     print("Digite a URL que deseja acessar:")
 
 
-def executar_comando(cmd: str, home: str, hist: Historico) -> None:
+def executar_comando(cmd: str, home: str | None, hist: Historico) -> str | None:
      match cmd:
         case "#back":
             anterior = hist.voltar()
@@ -126,13 +126,17 @@ def main():
             urls = carregar_urls()
 
             if entrada in urls:
-                home = entrada
-                hist.registrar(entrada)
-                redesenhar = True
+                if entrada != home:
+                    hist.registrar(home)
+                    home = entrada
+                    redesenhar = True
+                    continue
+                else:
+                    print("\nERROR: URL já estar sendo acessada!")
+                    continue
+            else:
+                print("\nERROR: URL não encontrada.")
                 continue
-
-            print("\nERROR: URL não encontrada.")
-            continue
 
 
 if __name__ == "__main__":

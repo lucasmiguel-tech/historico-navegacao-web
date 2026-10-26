@@ -14,12 +14,13 @@ class Historico:
     """
     Controla o histórico de páginas anteriores usando uma pilha
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self._pilha = []
     
-    def registrar(self,url:str):
+    def registrar(self,url:str|None) -> None:
         """Adiciona uma página anterior ao histórico."""
-        self._pilha.append(url)
+        if url is not None:
+            self._pilha.append(url)
 
     def voltar(self) -> str | None:
         """Remove e retorna a página mais recente do histórico."""
@@ -28,6 +29,6 @@ class Historico:
         
         return self._pilha.pop()
 
-    def exibir(self):
+    def exibir(self) -> list[str]:
         """Retorna uma cópia das páginas armazenadas."""
         return self._pilha.copy()
