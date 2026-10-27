@@ -14,18 +14,31 @@ Conceitos de Python
 from urls import carregar_urls, validar_url, adicionar_url
 from historico import Historico
 
-comandos = ["#back", "#showhist", "#urls", "#cmds", "#add", "#sair"]
+"""
+Dicionário dos comandos internos e suas funcionalidades.
+"""
+comandos = {
+    "#back" : "Voltar para a página anterior.",
+    "#showhist" : "Listar o histórico de páginas visitadas.",
+    "#urls" : "Listar as urls cadastradas no arquivo .txt.",
+    "#help" : "Listar os comandos disponiveis e suas funções.",
+    "#add" : "Cadastrar uma nova url.",
+    "#sair" : "Encerrar o navegador.",
+}
 
-def carregar_pagina(url: str | None) -> None:
+def carregar_pagina(url: str | None,hist:Historico) -> None:
     print("\x1b[2J", end="")
 
     if url is not None:
-        print(f"URL: {url}")
-        print("-----------------------------------\n")
-        print(f"\nVocê está na página: {url}\n")
+        print(f"Páginas Visitadas: [{", ".join(hist.exibir())}]") #exibe o histórico de páginas.
+        print("-----------------------------------")
+        print(f"\nVocê está na página: [{url}]\n")
+        print("Digite a url ou digite #back para retornar à última página visitada.")
+        print("-"*15)
+        
         return
     
-    print("-> Digite #cmds para ver os comandos disponíveis.\n")
+    print("-> Digite #help para ver os comandos disponíveis.\n")
     print("Digite a URL que deseja acessar:")
 
 
@@ -61,10 +74,10 @@ def executar_comando(cmd: str, home: str | None, hist: Historico) -> str | None:
 
             return home
 
-        case "#cmds":
+        case "#help":
             print("Comando disponíveis: \n")
-            for i in comandos:
-                print(i)
+            for comando,funcionalidade in comandos.items():
+                print(f"{comando} -> {funcionalidade}")
 
             return home
 
@@ -97,10 +110,10 @@ def main():
     while True:
 
         if redesenhar:
-            carregar_pagina(home)
+            carregar_pagina(home,hist)
             redesenhar = False
 
-        entrada = input("\n> ").strip()
+        entrada = input("\nurl -> ").strip()
 
         if entrada.startswith("#"):
             if entrada in comandos:
@@ -137,6 +150,9 @@ def main():
             else:
                 print("\nERROR: URL não encontrada.")
                 continue
+        
+        if not validar_url(entrada):
+            print("ERROR: URL possui formato inválido")
 
 
 if __name__ == "__main__":
