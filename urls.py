@@ -10,7 +10,7 @@ Responsabilidades:
 
 from pathlib import Path
 from urllib.parse import urlsplit
-
+import paginas 
 
 CAMINHO_URLS = Path(__file__).parent / "dados" / "urls.txt"
 
