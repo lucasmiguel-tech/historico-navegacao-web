@@ -13,6 +13,7 @@ Conceitos de Python
 
 from urls import carregar_urls, validar_url, adicionar_url
 from historico import Historico
+from arvore_urls import ArvoreURLs
 import paginas 
 
 """
