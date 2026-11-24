@@ -1,5 +1,7 @@
-www.ifpb.edu.br
-www.ifpb.edu.br/tsi
-www.ifpb.edu.br/tsi/professores
-www.ifpb.edu.br/tsi/alunos
-www.google.com.br
+https://www.suap.ifpb.edu.br
+https://www.google.com.br
+https://www.microsoft.com.br
+https://exemplo.com.br
+https://exemplo2.com.br
+https://exemplo3.com.br
+https://exemplo4.com.br

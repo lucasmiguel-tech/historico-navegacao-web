@@ -11,7 +11,7 @@ Conceitos de Python
 - Tratamento de exceções e mensagens de erro.
 '''
 
-from urls import carregar_urls, validar_url, adicionar_url
+from urls import carregar_urls, validar_url, adicionar_url , padronizar_url
 from historico import Historico
 from arvore_urls import ArvoreURLs
 import paginas 
@@ -117,6 +117,7 @@ def main():
 
         entrada = input("\nurl -> ").strip()
 
+        #Se entrada é um comando interno
         if entrada.startswith("#"):
             if entrada in comandos:
 
@@ -136,7 +137,9 @@ def main():
                 print("\nERRO: Comando não reconhecido.")
                 continue
             
-
+        #Se entrada é uma URL
+        entrada = padronizar_url(entrada)
+        
         if validar_url(entrada):
             urls = carregar_urls()
 
