@@ -151,21 +151,34 @@ def resolver_entrada(entrada: str, home: str | None) -> str | None:
 
 
 # ----- COMANDOS -----
+FIM_CONTEUDO = "#fim"
+
+
 def ler_conteudo() -> str:
-    """Lê várias linhas digitadas pelo usuário até uma linha vazia."""
-    print("Digite o conteúdo da página (linha vazia para terminar):")
+    """
+    Lê várias linhas digitadas pelo usuário.
+
+    Linhas vazias fazem parte do texto (permitem separar parágrafos).
+    A leitura termina com uma linha contendo apenas #fim ou com EOF
+    (Ctrl+Z + Enter no Windows, Ctrl+D no Linux/macOS).
+    """
+    print(f"Digite o conteúdo da página. Para terminar, digite {FIM_CONTEUDO} em uma linha sozinha.")
 
     linhas = []
 
     while True:
-        linha = input()
+        try:
+            linha = input()
+        except EOFError:
+            break
 
-        if not linha:
+        if linha.strip() == FIM_CONTEUDO:
             break
 
         linhas.append(linha)
 
-    return "\n".join(linhas)
+    # Remove linhas vazias sobrando no fim do texto.
+    return "\n".join(linhas).rstrip("\n")
 
 
 def cadastrar_url(arvore: ArvoreURLs, armazenamento: ArmazenamentoPaginas) -> None:
@@ -292,7 +305,11 @@ def main():
             carregar_pagina(home, hist, arvore, armazenamento)
             redesenhar = False
 
-        entrada = input("\nurl -> ").strip()
+        try:
+            entrada = input("\nurl -> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nEncerrando navegador...")
+            break
 
         if not entrada:
             continue
