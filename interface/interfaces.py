@@ -38,6 +38,7 @@ comandos = {
     "#urls" : "Listar as urls cadastradas no arquivo .txt.",
     "#help" : "Listar os comandos disponiveis e suas funções.",
     "#add" : "Cadastrar uma nova url (domínio ou página interna) e o seu conteúdo.",
+    "#recarregar" : "Limpar o terminal e exibir novamente a página atual.",
     "#sair" : "Encerrar o navegador.",
 }
 
@@ -321,6 +322,11 @@ def main():
                 if entrada == "#sair":
                     print("Encerrando navegador...")
                     break
+
+                # Redesenha a tela; o conteúdo é lido de novo do index.txt.
+                if entrada == "#recarregar":
+                    redesenhar = True
+                    continue
 
                 pagina_anterior = home
                 home = executar_comando(entrada, home, hist, arvore, armazenamento)
