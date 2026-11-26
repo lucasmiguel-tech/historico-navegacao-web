@@ -56,6 +56,14 @@ def montar_arvore(armazenamento: ArmazenamentoPaginas) -> ArvoreURLs:
 
         arvore.adicionar_dominio(dominio)  # Ignorado se o domínio já existe.
 
+        # Verifica se a página pode ser inserida na árvore.
+        if not arvore.verificar_insercao(dominio, segmentos):
+            print(
+                f"AVISO: '{url}' ignorada "
+                "(repetida ou limite de dois links atingido)."
+            )
+            continue
+
         try:
             if not armazenamento.pagina_existe(dominio, segmentos):
                 armazenamento.criar_pagina(
@@ -69,7 +77,7 @@ def montar_arvore(armazenamento: ArmazenamentoPaginas) -> ArvoreURLs:
             continue
 
         if not arvore.inserir_pagina(dominio, segmentos, caminho):
-            print(f"AVISO: '{url}' ignorada (repetida ou a página pai já possui 2 links).")
+            print(f"AVISO: Não foi possível inserir a url na árvore.")
 
     return arvore
 
