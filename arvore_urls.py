@@ -202,10 +202,10 @@ class ArvoreURLs:
                 paginas.append(url)
 
             if no.link_esquerdo is not None:
-                percorrer(no.link_esquerdo, caminho + [no.link_esquerdo.segmento])
+                percorrer(no.link_esquerdo, dominio , caminho + [no.link_esquerdo.segmento])
 
             if no.link_direito is not None:
-                percorrer(no.link_direito, caminho + [no.link_direito.segmento])
+                percorrer(no.link_direito, dominio , caminho + [no.link_direito.segmento])
 
         if dominio is None:
             for chave in self.dominios:
