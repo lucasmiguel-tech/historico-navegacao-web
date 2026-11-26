@@ -99,7 +99,7 @@ class ArvoreURLs:
         return [
             "/" + filho.segmento
             for filho in (no.link_esquerdo, no.link_direito)
-            if filho is not None
+            if filho is not None and filho.cadastrada
         ]
 
     # Inserção
