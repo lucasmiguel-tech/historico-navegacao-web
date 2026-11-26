@@ -77,6 +77,31 @@ class ArvoreURLs:
         
         return no_atual
 
+    def pagina_cadastrada(self, dominio : str, segmentos : list[str]) -> bool:
+        """Indica se a URL (dominio + segmentos) existe e está cadastrada."""
+        if not isinstance(dominio,str):
+            return False
+
+        no = self.buscar_no(dominio,segmentos)
+
+        return no is not None and no.cadastrada
+
+    def listar_links(self, dominio : str, segmentos : list[str]) -> list[str]:
+        """Retorna os links internos (filhos) da página, no formato '/segmento'."""
+        if not isinstance(dominio,str):
+            return []
+
+        no = self.buscar_no(dominio,segmentos)
+
+        if no is None:
+            return []
+
+        return [
+            "/" + filho.segmento
+            for filho in (no.link_esquerdo, no.link_direito)
+            if filho is not None
+        ]
+
     # Inserção
     def verificar_insercao(self,dominio : str , 
         segmentos : list[str]) -> bool:
