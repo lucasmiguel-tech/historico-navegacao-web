@@ -21,6 +21,7 @@ from urls import (
     carregar_urls,
     validar_url,
     adicionar_url,
+    remover_url,
     padronizar_url,
     decompor_url,
     montar_url,

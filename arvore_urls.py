@@ -235,7 +235,7 @@ class ArvoreURLs:
         if dominio is None:
             for chave in self.dominios:
                 raiz = self.dominios[chave]
-                percorrer(raiz, [])
+                percorrer(raiz,dominio, [])
 
         else:
             dominio = dominio.lower()
@@ -244,6 +244,6 @@ class ArvoreURLs:
                 return []
 
             raiz = self.dominios[dominio]
-            percorrer(raiz, [])
+            percorrer(raiz,dominio,[])
 
         return paginas
