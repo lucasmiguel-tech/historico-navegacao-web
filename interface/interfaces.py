@@ -216,34 +216,106 @@ def cadastrar_url(arvore: ArvoreURLs, armazenamento: ArmazenamentoPaginas) -> No
         dominio, segmentos = decompor_url(nova_url)
         nova_url = montar_url(dominio, segmentos)
 
-        arvore.adicionar_dominio(dominio)  # Ignorado se o domínio já existe.
 
+
+        # Verifica se o domínio já existe na árvore.
+        dominio_novo = dominio not in arvore.dominios
+
+        if dominio_novo:
+            arvore.adicionar_dominio(dominio)
+
+        # Verifica se a página pode ser inserida.
         if not arvore.verificar_insercao(dominio, segmentos):
-            print("Não é possível cadastrar: a URL já existe ou a página pai já possui 2 links.")
-            continue
+            print(
+                "Não é possível cadastrar: a URL já existe "
+                "ou a página pai já possui 2 links."
+            )
 
-        valida, msg = adicionar_url(nova_url, urls)
+            if dominio_novo:
+                arvore.dominios.pop(dominio, None)
 
-        if not valida:
-            print(msg)
             continue
 
         conteudo = ler_conteudo()
 
+        # ETAPA 1: Criar o arquivo da página.
+        arquivo_criado = False
+
         try:
-            caminho = armazenamento.criar_pagina(dominio, segmentos, conteudo)
+            caminho = armazenamento.criar_pagina(
+                dominio,
+                segmentos,
+                conteudo
+            )
+            arquivo_criado = True
+
         except PaginaJaExiste:
-            caminho = armazenamento.caminho_arquivo(dominio, segmentos)
-            print("Já havia um arquivo para esta página; o conteúdo existente foi mantido.")
+            # Não apaga nem sobrescreve um arquivo que já existia.
+            caminho = armazenamento.caminho_arquivo(
+                dominio,
+                segmentos
+            )
+            print(
+                "Já havia um arquivo para esta página; "
+                "o conteúdo existente foi mantido."
+            )
+
         except ErroPagina as erro:
             print(f"AVISO: {erro}")
-            caminho = None
 
-        arvore.inserir_pagina(dominio, segmentos, caminho)
+            if dominio_novo:
+                arvore.dominios.pop(dominio, None)
+
+            continue
+
+        # ETAPA 2: Registrar a URL no arquivo urls.txt.
+        valida, msg = adicionar_url(nova_url, urls)
+
+        if not valida:
+            print(msg)
+
+            # Desfaz a criação do arquivo, se ele foi criado agora.
+            if arquivo_criado:
+                try:
+                    caminho.unlink()
+                except OSError as erro:
+                    print(f"AVISO: Não foi possível desfazer o arquivo: {erro}")
+
+            if dominio_novo:
+                arvore.dominios.pop(dominio, None)
+
+            continue
+
+        # ETAPA 3: Inserir a página na árvore.
+        inserida = arvore.inserir_pagina(
+            dominio,
+            segmentos,
+            caminho
+        )
+
+        if not inserida:
+            print("Não foi possível inserir a página na árvore.")
+
+            # Desfaz o registro no arquivo urls.txt.
+            removida, mensagem = remover_url(nova_url, urls)
+
+            if not removida:
+                print(f"AVISO: Não foi possível desfazer o cadastro: {mensagem}")
+
+            # Remove somente o arquivo criado nesta operação.
+            if arquivo_criado:
+                try:
+                    caminho.unlink()
+                except OSError as erro:
+                    print(f"AVISO: Não foi possível remover o arquivo: {erro}")
+
+            if dominio_novo:
+                arvore.dominios.pop(dominio, None)
+
+            continue
 
         print(msg)
         return
-
 
 def executar_comando(
     cmd: str,
