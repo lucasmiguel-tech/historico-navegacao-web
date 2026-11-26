@@ -225,6 +225,14 @@ def decompor_url(url: str) -> tuple[str, list[str]]:
     return dominio, segmentos
 
 
+def montar_url(dominio: str, segmentos: list[str]) -> str:
+    """Operação inversa de decompor_url: monta a URL padronizada."""
+
+    caminho = "".join("/" + segmento for segmento in segmentos)
+
+    return "https://" + dominio.lower() + caminho
+
+
 # PERSISTÊNCIA DAS URLs
 def carregar_urls() -> list[str]:
     """Carrega as URLs cadastradas no arquivo."""

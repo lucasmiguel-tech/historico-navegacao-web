@@ -6,3 +6,10 @@ https://exemplo2.com.br
 https://exemplo3.com.br
 https://exemplo4.com.br
 https://www.ifpb.edu.br
+https://www.ifpb.edu.br/tsi
+https://www.ifpb.edu.br/tsi/professores
+https://www.ifpb.edu.br/tsi/alunos
+https://www.ifpb.edu.br/rc
+https://www.ifpb.edu.br/rc/coordenacao
+https://www.ifpb.edu.br/rc/coordenacao/matriz_curricular
+https://www.ifpb.edu.br/tsi/alunos/boletins
